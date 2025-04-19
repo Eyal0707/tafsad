@@ -35,7 +35,6 @@ export class Database {
 
   async updateFormColumn(id: string, columnId: string): Promise<void> {
     const result = await Form.updateOne({ id }, { columnId });
-    if (result.modifiedCount === 0) throw new Error('Form not found');
   }
 
   async updateFormPunishment(id: string, punishment: string): Promise<void> {

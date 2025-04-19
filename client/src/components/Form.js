@@ -10,7 +10,8 @@ function Form({ onSuccess }) {
     occurrence: '',
     damage: '',
     prevention: '',
-    date: new Date().toISOString().split('T')[0],
+    date: new Date().toLocaleString('he-IL', { timeZone: 'Asia/Jerusalem' })
+    .replace(/(\d{2})\/(\d{2})\/(\d{4}), (\d{2}):(\d{2})/, '$3-$2-$1T$4:$5'),
     requestDateTime: new Date().toLocaleString('he-IL', { timeZone: 'Asia/Jerusalem' })
       .replace(/(\d{2})\/(\d{2})\/(\d{4}), (\d{2}):(\d{2})/, '$3-$2-$1T$4:$5')
   });
@@ -21,6 +22,7 @@ function Form({ onSuccess }) {
       ...prev,
       [name]: value
     }));
+    console.log(formData)
   };
 
   const handleSubmit = async (e) => {

@@ -195,11 +195,7 @@ app.patch('/api/forms/:id/column', authenticateToken, async (req: ColumnUpdateRe
     await database.updateFormColumn(id, columnId);
     res.json({ id, columnId });
   } catch (error) {
-    if ((error as Error).message === 'Form not found') {
-      res.status(404).json({ message: 'Form not found' });
-    } else {
       res.status(500).json({ message: 'Error updating form column', error: (error as Error).message });
-    }
   }
 });
 

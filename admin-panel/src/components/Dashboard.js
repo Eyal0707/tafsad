@@ -7,15 +7,13 @@ import { getConfig } from '../config';
 
 const Dashboard = ({
   onLogout,
-  onSort,
   onUpdateColumn,
   onUpdatePunishment,
 }) => {
   const { forms, pendingForms, AddPendingForm, handleDeletePendingForm, handleMergePendingForm } = useAuth();
   const [columns, setColumns] = useState([]);
+  const [isSortAscending, setIsSortAscending] = useState(true);
   const [selectedForm, setSelectedForm] = useState(null);
-  const [sortBy, setSortBy] = useState('date');
-  const [sortOrder, setSortOrder] = useState('desc');
   const [newComment, setNewComment] = useState('');
   const [newPendingForm, setNewPendingForm] = useState({
     name: '',
@@ -62,11 +60,6 @@ const Dashboard = ({
     }
   }
 
-  const handleSortChange = (newSortBy, newSortOrder) => {
-    setSortBy(newSortBy);
-    setSortOrder(newSortOrder);
-    onSort(newSortBy, newSortOrder);
-  };
 
   const handleDragEnd = async (result) => {
     if (!result.destination) return;
@@ -143,24 +136,10 @@ const Dashboard = ({
       <div className="dashboard-header">
         <h1>לוח בקרה</h1>
         <div className="dashboard-actions">
+          <button className="sort-btn" onClick={() => setIsSortAscending(prev => !prev)}>מיין לפי זמן</button>
           <button className="export-btn" onClick={exportToCSV}>ייצוא ל-CSV</button>
           <button className="logout-btn" onClick={onLogout}>התנתק</button>
         </div>
-      </div>
-
-      <div className="sort-controls">
-        <button
-          className={`sort-btn ${sortBy === 'date' ? 'active' : ''}`}
-          onClick={() => handleSortChange('date', sortOrder === 'asc' ? 'desc' : 'asc')}
-        >
-          מיון לפי תאריך {sortOrder === 'asc' ? '↑' : '↓'}
-        </button>
-        <button
-          className={`sort-btn ${sortBy === 'name' ? 'active' : ''}`}
-          onClick={() => handleSortChange('name', sortOrder === 'asc' ? 'desc' : 'asc')}
-        >
-          מיון לפי שם {sortOrder === 'asc' ? '↑' : '↓'}
-        </button>
       </div>
 
       <DragDropContext onDragEnd={handleDragEnd}>
@@ -228,6 +207,11 @@ const Dashboard = ({
                   >
                     {forms
                       .filter(form => form.columnId === column.id)
+                      .sort((a, b) => {
+                        const timeA = new Date(a.date);
+                        const timeB = new Date(b.date);
+                        return isSortAscending ? timeA - timeB : timeB - timeA;
+                      })
                       .map((form, index) => (
                         <Draggable key={form.id} draggableId={form.id} index={index}>
                           {(provided) => (

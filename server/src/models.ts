@@ -15,6 +15,16 @@ const PendingFormSchema = new mongoose.Schema({
   updatedAt: String,
 });
 
+const EmbeddedPendingFormSchema = new mongoose.Schema({
+  id: String,
+  name: String,
+  commander: String,
+  eventDescription: String,
+  createdAt: String,
+  updatedAt: String,
+}, { _id: false });
+
+
 const FormSchema = new mongoose.Schema({
   id: { type: String, required: true, unique: true },
   name: String,
@@ -28,15 +38,8 @@ const FormSchema = new mongoose.Schema({
   columnId: String,
   punishment: String,
   comments: { type: [CommentSchema], default: [] },
-  connectedPendingForm: { type: PendingFormSchema, default: null }
-});
-
-const ColumnSchema = new mongoose.Schema({
-  id: { type: String, required: true, unique: true },
-  title: String,
-  order: Number,
+  connectedPendingForm: { type: EmbeddedPendingFormSchema, default: null }
 });
 
 export const Form = mongoose.model('Form', FormSchema);
-export const Column = mongoose.model('Column', ColumnSchema);
 export const PendingForm = mongoose.model('PendingForm', PendingFormSchema);

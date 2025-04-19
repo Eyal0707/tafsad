@@ -101,21 +101,6 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const handleSort = (sortBy, sortOrder) => {
-    const sortedForms = [...forms].sort((a, b) => {
-      if (sortBy === 'date') {
-        return sortOrder === 'asc'
-          ? new Date(a.date).getTime() - new Date(b.date).getTime()
-          : new Date(b.date).getTime() - new Date(a.date).getTime();
-      } else {
-        return sortOrder === 'asc'
-          ? a.name.localeCompare(b.name)
-          : b.name.localeCompare(a.name);
-      }
-    });
-    setForms(sortedForms);
-  };
-
   const fetchPendingForms = async () => {
     try {
       const token = localStorage.getItem('adminToken');
@@ -311,7 +296,6 @@ export const AuthProvider = ({ children }) => {
         loginError,
         handleLogin,
         handleLogout,
-        handleSort,
         handleUpdateColumn,
         handleUpdatePunishment,
         AddPendingForm,
